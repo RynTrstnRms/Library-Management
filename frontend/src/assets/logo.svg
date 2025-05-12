@@ -1,0 +1,127 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="150" cy="150" r="120" fill="#f5f5f5" />
+  
+  <!-- Dynamic Books Arrangement - Circular Pattern -->
+  <!-- Book 1 -->
+  <g transform="translate(150, 150) rotate(0)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#1E88E5" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 2 -->
+  <g transform="translate(150, 150) rotate(45)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#2196F3" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 3 -->
+  <g transform="translate(150, 150) rotate(90)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#0D47A1" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 4 -->
+  <g transform="translate(150, 150) rotate(135)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#64B5F6" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 5 -->
+  <g transform="translate(150, 150) rotate(180)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#1565C0" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 6 -->
+  <g transform="translate(150, 150) rotate(225)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#42A5F5" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 7 -->
+  <g transform="translate(150, 150) rotate(270)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#0288D1" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Book 8 -->
+  <g transform="translate(150, 150) rotate(315)">
+    <g transform="translate(0, -70)">
+      <rect x="-15" y="-35" width="30" height="70" rx="3" fill="#1976D2" />
+      <rect x="-10" y="-30" width="20" height="60" rx="2" fill="#ffffff" opacity="0.3" />
+      <line x1="-8" y1="-20" x2="8" y2="-20" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="-10" x2="8" y2="-10" stroke="#ffffff" stroke-width="1.5" />
+      <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" stroke-width="1.5" />
+    </g>
+  </g>
+  
+  <!-- Central Hub - Digital Interface -->
+  <circle cx="150" cy="150" r="45" fill="#0D47A1" />
+  <circle cx="150" cy="150" r="40" fill="#1E88E5" />
+  <circle cx="150" cy="150" r="35" fill="#2196F3" />
+  
+  <!-- Digital Interface Elements -->
+  <rect x="135" y="130" width="30" height="5" rx="2" fill="white" />
+  <rect x="135" y="140" width="30" height="5" rx="2" fill="white" />
+  <rect x="135" y="150" width="30" height="5" rx="2" fill="white" />
+  <rect x="135" y="160" width="20" height="5" rx="2" fill="white" />
+  
+  <!-- Connection Lines - Dynamic Flowing Data -->
+  <g stroke="#64B5F6" stroke-width="2" fill="none">
+    <path d="M150 105 C150 110, 170 115, 150 120" />
+    <path d="M150 105 C150 110, 130 115, 150 120" />
+    <path d="M195 150 C190 150, 185 170, 180 150" />
+    <path d="M195 150 C190 150, 185 130, 180 150" />
+    <path d="M150 195 C150 190, 170 185, 150 180" />
+    <path d="M150 195 C150 190, 130 185, 150 180" />
+    <path d="M105 150 C110 150, 115 170, 120 150" />
+    <path d="M105 150 C110 150, 115 130, 120 150" />
+  </g>
+  
+  <!-- Pulse Animation Effect -->
+  <circle cx="150" cy="150" r="90" stroke="#2196F3" stroke-width="2" fill="none" opacity="0.3">
+    <animate attributeName="r" values="50;95" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.6;0" dur="3s" repeatCount="indefinite" />
+  </circle>
+  
+  <circle cx="150" cy="150" r="70" stroke="#1E88E5" stroke-width="3" fill="none" opacity="0.2">
+    <animate attributeName="r" values="40;75" dur="3s" repeatCount="indefinite" begin="1s" />
+    <animate attributeName="opacity" values="0.5;0" dur="3s" repeatCount="indefinite" begin="1s" />
+  </circle>
+</svg>
