@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiService from '@/services/api'
 
 export default {
   data() {
@@ -99,6 +99,9 @@ export default {
       transactions: [],
       userSearch: ''
     }
+  },
+  mounted() {
+    this.fetchTransactions()
   },
   computed: {
     filteredTransactions() {
@@ -109,16 +112,16 @@ export default {
       );
     }
   },
-  mounted() {
-    axios.get('transactions/')
-      .then(res => {
-        this.transactions = res.data
-      })
-      .catch(() => {
-        alert("Error fetching transactions.")
-      })
-  },
   methods: {
+    async fetchTransactions() {
+      try {
+        const response = await apiService.getTransactions()
+        this.transactions = response.data
+      } catch (error) {
+        console.error('Error fetching transactions:', error)
+        alert("Error fetching transactions.")
+      }
+    },
     formatDate(datetime) {
       return new Date(datetime).toLocaleString()
     }

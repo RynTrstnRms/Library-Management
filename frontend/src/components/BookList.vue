@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- Add this at the top of your template -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <div 
         class="toast align-items-center text-white bg-success border-0" 
@@ -106,6 +105,7 @@
 <script>
 import axios from 'axios'
 import BookForm from './BookForm.vue'
+import apiService from '@/services/api'
 
 export default {
   components: { BookForm },
@@ -134,7 +134,9 @@ export default {
   },
   methods: {
     fetchBooks() {
-      axios.get('books/').then(res => this.books = res.data);
+      apiService.getBooks()
+        .then(response => this.books = response.data)
+        .catch(error => console.error('Error fetching books:', error))
     },
     openAddModal() {
       this.selectedBook = null;  // Ensure selectedBook is null for new books
@@ -153,26 +155,22 @@ export default {
       this.successToast.show();
     },
     createBook(bookData) {
-      axios.post('books/', bookData)
+      apiService.addBook(bookData)
         .then(() => {
-          this.fetchBooks();
-          this.closeModal();
-          this.showToast('Book added successfully!');
+          this.fetchBooks()
+          this.closeModal()
+          this.showToast('Book added successfully!')
         })
-        .catch(error => {
-          console.error('Error creating book:', error);
-        });
+        .catch(error => console.error('Error creating book:', error))
     },
     updateBook(book) {
-      axios.put(`books/${book.id}/`, book)
+      apiService.updateBook(book.id, book)
         .then(() => {
-          this.closeModal();
-          this.fetchBooks();
-          this.showToast('Book updated successfully!');
+          this.closeModal()
+          this.fetchBooks()
+          this.showToast('Book updated successfully!')
         })
-        .catch(error => {
-          console.error('Error updating book:', error);
-        });
+        .catch(error => console.error('Error updating book:', error))
     },
     deleteBook(id) {
       axios.delete(`books/${id}/delete/`).then(this.fetchBooks);
@@ -187,15 +185,13 @@ export default {
     },
     confirmDeleteBook() {
       if (this.bookToDelete) {
-        axios.delete(`books/${this.bookToDelete.id}/delete/`)
+        apiService.deleteBook(this.bookToDelete.id)
           .then(() => {
-            this.fetchBooks();
-            this.closeDeleteModal();
-            this.showToast('Book deleted successfully!');
+            this.fetchBooks()
+            this.closeDeleteModal()
+            this.showToast('Book deleted successfully!')
           })
-          .catch(error => {
-            console.error('Error deleting book:', error);
-          });
+          .catch(error => console.error('Error deleting book:', error))
       }
     },
     confirmDelete(book) {

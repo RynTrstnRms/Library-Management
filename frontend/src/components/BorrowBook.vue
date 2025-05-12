@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiService from '@/services/api'
 
 export default {
   data() {
@@ -216,39 +216,35 @@ export default {
       this.selectedBookTitle = `${book.title} by ${book.author}`;
     },
     fetchBooks() {
-      axios.get('books/')
+      apiService.getBooks()
         .then(res => {
-          this.books = res.data;
+          this.books = res.data
         })
         .catch(error => {
-          console.error('Error fetching books:', error);
-          this.errorMessage = 'Error fetching books. Please try again.';
-        });
+          console.error('Error fetching books:', error)
+          this.errorMessage = 'Error fetching books. Please try again.'
+        })
     },
     fetchUsers() {
-      axios.get('users/')
+      apiService.getUsers()
         .then(res => {
-          this.users = res.data;
+          this.users = res.data
         })
         .catch(error => {
-          console.error('Error fetching users:', error);
-          this.errorMessage = 'Error fetching users. Please try again.';
-        });
+          console.error('Error fetching users:', error)
+          this.errorMessage = 'Error fetching users. Please try again.'
+        })
     },
     borrowBooks() {
-      if (!this.canBorrow) return;
+      if (!this.canBorrow) return
 
-      this.borrowInProgress = true;
-      this.successMessage = '';
-      this.errorMessage = '';
-
-      // Create an array of promises for each book borrow request
+      this.borrowInProgress = true
       const borrowPromises = this.selectedBooks.map(book => {
-        return axios.post('borrow/', {
+        return apiService.borrowBook({
           book_id: book.id,
           username: this.username
-        });
-      });
+        })
+      })
 
       Promise.all(borrowPromises)
         .then(() => {

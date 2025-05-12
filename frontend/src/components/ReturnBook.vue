@@ -212,7 +212,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiService from '@/services/api'
 
 export default {
   data() {
@@ -251,7 +251,7 @@ export default {
     },
     async fetchBorrowedBooks() {
       try {
-        const response = await axios.get('transactions/')
+        const response = await apiService.getBorrowedBooks()
         this.borrowedBooks = response.data.filter(t => t.status === 'borrowed')
       } catch (error) {
         this.errorMessage = 'Error fetching borrowed books'
@@ -278,13 +278,12 @@ export default {
 
       this.returnInProgress = true;
       try {
-        await axios.post(`return/${this.selectedTransaction.id}/`, {
+        await apiService.returnBook(this.selectedTransaction.id, {
           condition: this.returnDetails.condition,
           notes: this.returnDetails.notes,
           damage_reported: this.returnDetails.condition !== 'good'
         });
         
-        // Set return details for success modal
         this.returnedBookDetails = {
           title: this.selectedTransaction.book.title,
           username: this.selectedTransaction.user.username,
@@ -292,7 +291,6 @@ export default {
           notes: this.returnDetails.notes
         };
 
-        // Close return modal and show success modal
         this.closeReturnModal();
         this.successModal.show();
         await this.fetchBorrowedBooks();
