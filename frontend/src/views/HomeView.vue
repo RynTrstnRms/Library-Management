@@ -33,7 +33,7 @@
       <div class="col-md-4">
         <div class="card text-center p-4">
           <div class="card-body">
-            <i class="fas fa-hand-holding-book fa-3x mb-3 text-success"></i>
+            <i class="fas fa-solid fa-book-open fa-3x mb-3 text-success"></i>
             <h5 class="card-title">Books Borrowed</h5>
             <p class="card-text display-6">{{ borrowedBooks }}</p>
           </div>
