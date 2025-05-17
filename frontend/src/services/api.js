@@ -31,6 +31,10 @@ const apiService = {
     return axios.get(`transactions/?status=${status}`)
   },
 
+  getBorrowTransactions() {
+    return axios.get('transactions/');
+  },
+
   // Borrow/Return
   borrowBook(data) {
     return axios.post('borrow/', data)
@@ -49,6 +53,11 @@ const apiService = {
     return axios.get(`users/${userId}/`)
   },
 
+  // Check if a book is borrowed by a specific user
+  isBookBorrowedByUser(bookId, username) {
+    return axios.get(`transactions/?book=${bookId}&user=${username}&status=borrowed`)
+      .then(response => response.data.length > 0);
+  },
 }
 
 export default apiService

@@ -38,17 +38,30 @@ class BorrowTransactionViewSet(viewsets.ModelViewSet):
             )
 
         book = get_object_or_404(Book, pk=book_id)
+        
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if user already has an active borrow for this book
+        existing_borrow = BorrowTransaction.objects.filter(
+            book=book,
+            user=user,
+            status='borrowed'
+        ).exists()
+
+        if existing_borrow:
+            return Response(
+                {"error": "You already have this book borrowed"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         if book.copies_available <= 0:
             return Response(
                 {"error": "No copies available for borrowing"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
         transaction = BorrowTransaction.objects.create(
             book=book,

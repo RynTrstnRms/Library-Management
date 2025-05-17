@@ -4,10 +4,6 @@
       {{ successMessage }}
     </div>
 
-    <div v-if="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-
     <div class="row">
 
       <!-- Books Section -->
@@ -140,6 +136,27 @@
         </div>
       </div>
     </div>
+
+    <!-- Already Borrowed Error Modal -->
+    <div class="modal fade" id="alreadyBorrowedModal" tabindex="-1" ref="alreadyBorrowedModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              Cannot Borrow Book
+            </h5>
+            <button type="button" class="btn-close" @click="closeAlreadyBorrowedModal"></button>
+          </div>
+          <div class="modal-body">
+            <p>{{ alreadyBorrowedMessage }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeAlreadyBorrowedModal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -160,6 +177,7 @@ export default {
       bookSearch: '',
       userSearch: '',
       successModal: null,
+      alreadyBorrowedModal: null,
       selectedBooks: [],
       borrowDetails: {
         books: [],
@@ -167,7 +185,8 @@ export default {
         date: ''
       },
       showUserList: false,
-      selectedUser: null
+      selectedUser: null,
+      alreadyBorrowedMessage: ''
     }
   },
   computed: {
@@ -195,14 +214,41 @@ export default {
     this.fetchBooks();
     this.fetchUsers();
     this.successModal = new bootstrap.Modal(this.$refs.successModal);
+    this.alreadyBorrowedModal = new bootstrap.Modal(this.$refs.alreadyBorrowedModal);
   },
   methods: {
-    toggleBookSelection(book) {
-      const index = this.selectedBooks.findIndex(b => b.id === book.id);
-      if (index === -1) {
+    async checkBookAvailability(book) {
+      if (!this.selectedUser) return true;
+      
+      try {
+        // Get all transactions for this book and user
+        const response = await apiService.getBorrowTransactions();
+        const userBorrowedThisBook = response.data.some(transaction => 
+          transaction.book.id === book.id && 
+          transaction.user.username === this.selectedUser.username && 
+          transaction.status === 'borrowed'
+        );
+
+        if (userBorrowedThisBook) {
+          this.alreadyBorrowedMessage = `${this.selectedUser.username} already has "${book.title}" borrowed. Please return it first before borrowing again.`;
+          this.alreadyBorrowedModal.show();
+          return false;
+        }
+        return true;
+      } catch (error) {
+        console.error('Error checking book availability:', error);
+        return false;  // Return false on error to be safe
+      }
+    },
+    async toggleBookSelection(book) {
+      if (this.selectedBooks.find(b => b.id === book.id)) {
+        this.removeBook(book);
+        return;
+      }
+
+      if (await this.checkBookAvailability(book)) {
         this.selectedBooks.push(book);
-      } else {
-        this.selectedBooks.splice(index, 1);
+        this.errorMessage = ''; // Clear any previous errors
       }
     },
     removeBook(book) {
@@ -235,42 +281,50 @@ export default {
           this.errorMessage = 'Error fetching users. Please try again.'
         })
     },
-    borrowBooks() {
-      if (!this.canBorrow) return
+    async borrowBooks() {
+      if (!this.canBorrow) return;
 
-      this.borrowInProgress = true
-      const borrowPromises = this.selectedBooks.map(book => {
-        return apiService.borrowBook({
-          book_id: book.id,
-          username: this.username
-        })
-      })
+      this.borrowInProgress = true;
 
-      Promise.all(borrowPromises)
-        .then(() => {
-          this.borrowDetails = {
-            books: this.selectedBooks.map(book => ({
-              title: book.title,
-              author: book.author
-            })),
-            username: this.username,
-            date: new Date().toLocaleString()
-          };
+      try {
+        for (const book of this.selectedBooks) {
+          try {
+            await apiService.borrowBook({
+              book_id: book.id,
+              username: this.username
+            });
+          } catch (error) {
+            if (error.response?.data?.error === "You already have this book borrowed") {
+              // Updated modal message to be more user-friendly
+              this.alreadyBorrowedMessage = `${this.selectedUser.username} has already borrowed "${book.title}". Please return it first before borrowing again.`;
+              this.alreadyBorrowedModal.show();
+              throw error;
+            }
+            throw error;
+          }
+        }
 
-          this.successModal.show();
-          this.selectedBooks = [];
-          this.username = '';
-          this.selectedUser = null;
-          this.fetchBooks();
-        })
-        .catch(err => {
-          const message = err.response?.data?.error || "Failed to borrow books.";
-          this.errorMessage = message;
-          console.error(err);
-        })
-        .finally(() => {
-          this.borrowInProgress = false;
-        });
+        this.borrowDetails = {
+          books: this.selectedBooks.map(book => ({
+            title: book.title,
+            author: book.author
+          })),
+          username: this.username,
+          date: new Date().toLocaleString()
+        };
+
+        this.successModal.show();
+        this.selectedBooks = [];
+        this.username = '';
+        this.selectedUser = null;
+        this.fetchBooks();
+
+      } catch (err) {
+        // Remove error message handling since we're using modal
+        console.error('Error borrowing books:', err);
+      } finally {
+        this.borrowInProgress = false;
+      }
     },
     selectUser(user) {
       this.selectedUser = user;
@@ -280,6 +334,9 @@ export default {
     },
     closeSuccessModal() {
       this.successModal.hide();
+    },
+    closeAlreadyBorrowedModal() {
+      this.alreadyBorrowedModal.hide();
     },
     handleClickOutside(event) {
       const container = this.$el.querySelector('.user-search-container');
@@ -292,6 +349,7 @@ export default {
     this.fetchBooks();
     this.fetchUsers();
     this.successModal = new bootstrap.Modal(this.$refs.successModal);
+    this.alreadyBorrowedModal = new bootstrap.Modal(this.$refs.alreadyBorrowedModal);
     document.addEventListener('click', this.handleClickOutside);
   },
   beforeDestroy() {
@@ -462,5 +520,25 @@ export default {
 .borrowed-books-list {
   margin: 0;
   padding-left: 20px;
+}
+
+/* Add to your existing styles */
+.modal-header.bg-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.modal-header.bg-warning .btn-close {
+  box-shadow: none;
+}
+
+.modal-body {
+  font-size: 1.1rem;
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem;
 }
 </style>

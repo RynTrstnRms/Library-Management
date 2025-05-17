@@ -1,16 +1,17 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit" novalidate>
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
       <input 
         type="text" 
         class="form-control"
-        :class="{ 'is-invalid': errors.title }"
+        :class="{ 'is-invalid': submitted && errors.title }"
         id="title" 
-        v-model="formData.title" 
-        required
+        v-model="formData.title"
       >
-      <div class="invalid-feedback">{{ errors.title }}</div>
+      <div class="invalid-feedback" v-show="submitted && errors.title">
+        {{ errors.title }}
+      </div>
     </div>
 
     <div class="mb-3">
@@ -18,12 +19,13 @@
       <input 
         type="text" 
         class="form-control"
-        :class="{ 'is-invalid': errors.author }"
+        :class="{ 'is-invalid': submitted && errors.author }"
         id="author" 
-        v-model="formData.author" 
-        required
+        v-model="formData.author"
       >
-      <div class="invalid-feedback">{{ errors.author }}</div>
+      <div class="invalid-feedback" v-show="submitted && errors.author">
+        {{ errors.author }}
+      </div>
     </div>
 
     <div class="mb-3">
@@ -31,12 +33,13 @@
       <input 
         type="text" 
         class="form-control"
-        :class="{ 'is-invalid': errors.isbn }"
+        :class="{ 'is-invalid': submitted && errors.isbn }"
         id="isbn" 
-        v-model="formData.isbn" 
-        required
+        v-model="formData.isbn"
       >
-      <div class="invalid-feedback">{{ errors.isbn }}</div>
+      <div class="invalid-feedback" v-show="submitted && errors.isbn">
+        {{ errors.isbn }}
+      </div>
     </div>
 
     <div class="mb-3">
@@ -44,18 +47,19 @@
       <input 
         type="number" 
         class="form-control"
-        :class="{ 'is-invalid': errors.copies_available }"
+        :class="{ 'is-invalid': submitted && errors.copies_available }"
         id="copies" 
-        v-model.number="formData.copies_available" 
-        min="0" 
-        required
+        v-model.number="formData.copies_available"
+        min="0"
       >
-      <div class="invalid-feedback">{{ errors.copies_available }}</div>
+      <div class="invalid-feedback" v-show="submitted && errors.copies_available">
+        {{ errors.copies_available }}
+      </div>
     </div>
 
     <div class="d-flex justify-content-end gap-2">
-      <button type="button" class="btn btn-secondary" @click="$emit('cancel')">Cancel</button>
-      <button type="submit" class="btn btn-primary" :disabled="!isValid">
+      <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+      <button type="submit" class="btn btn-primary">
         {{ isEditMode ? 'Update' : 'Add Book' }}
       </button>
     </div>
@@ -83,13 +87,11 @@ export default {
         author: '',
         isbn: '',
         copies_available: ''
-      }
+      },
+      submitted: false
     }
   },
   computed: {
-    isValid() {
-      return this.validateForm() === true;
-    },
     isEditMode() {
       return !!this.book;
     }
@@ -121,9 +123,6 @@ export default {
       } else if (![10, 13].includes(isbn.length)) {
         this.errors.isbn = 'ISBN must be 10 or 13 digits';
         isValid = false;
-      } else if (!/^\d*$/.test(isbn)) {
-        this.errors.isbn = 'ISBN must contain only numbers';
-        isValid = false;
       }
 
       if (this.formData.copies_available < 0) {
@@ -134,6 +133,8 @@ export default {
       return isValid;
     },
     handleSubmit() {
+      this.submitted = true;
+      
       if (this.validateForm()) {
         const formattedData = {
           ...this.formData,
@@ -146,6 +147,10 @@ export default {
           this.$emit('add', formattedData);
         }
       }
+    },
+    cancel() {
+      this.submitted = false;
+      this.$emit('cancel');
     },
     resetForm() {
       this.formData = {
@@ -160,6 +165,7 @@ export default {
         isbn: '',
         copies_available: ''
       };
+      this.submitted = false;
     }
   },
   watch: {
@@ -179,6 +185,10 @@ export default {
 
 <style scoped>
 .invalid-feedback {
+  display: none;
+}
+
+.is-invalid ~ .invalid-feedback {
   display: block;
 }
 </style>

@@ -99,6 +99,30 @@
         </div>
       </div>
     </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" ref="errorModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title">Cannot Delete Book</h5>
+            <button type="button" class="btn-close btn-close-white" @click="closeErrorModal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-exclamation-triangle text-danger me-3 fa-2x"></i>
+              <div>
+                <p class="mb-1">This book cannot be deleted because it is currently borrowed.</p>
+                <p class="text-muted mb-0">Please wait until all copies are returned before deleting.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeErrorModal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -117,6 +141,7 @@ export default {
       searchQuery: '',
       modal: null,
       deleteModal: null,
+      errorModal: null,
       bookToDelete: null,
       successToast: null,
       toastMessage: ''
@@ -191,11 +216,20 @@ export default {
             this.closeDeleteModal()
             this.showToast('Book deleted successfully!')
           })
-          .catch(error => console.error('Error deleting book:', error))
+          .catch(error => {
+            console.error('Error deleting book:', error)
+            this.closeDeleteModal()
+            if (error.response?.data?.error === "Cannot delete book that is currently borrowed.") {
+              this.errorModal.show()
+            }
+          })
       }
     },
     confirmDelete(book) {
       this.openDeleteModal(book);
+    },
+    closeErrorModal() {
+      this.errorModal.hide();
     }
   },
   mounted() {
@@ -203,6 +237,7 @@ export default {
     // Change how we initialize the modal
     this.modal = new bootstrap.Modal(this.$refs.bookModal);
     this.deleteModal = new bootstrap.Modal(this.$refs.deleteModal);
+    this.errorModal = new bootstrap.Modal(this.$refs.errorModal);
     this.successToast = new bootstrap.Toast(this.$refs.successToast, {
       animation: true,
       delay: 3000
